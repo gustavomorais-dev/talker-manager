@@ -1,5 +1,6 @@
 const express = require('express');
 const { readTalkersFile } = require('./utils/fsUtils');
+const { generateToken } = require('./utils/tokensUtils');
 const app = express();
 app.use(express.json());
 
@@ -32,6 +33,13 @@ app.get('/talker/:id', async (request, response) => {
   }
 });
 
+// 3 - Endpoint para realizar o login e obter um token aleatório
+app.post('/login', (request, response) => {
+  const { email, password } = request.body;
+
+  const token = generateToken();
+  response.status(HTTP_OK_STATUS).json({ token });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
