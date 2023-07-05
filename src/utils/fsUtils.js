@@ -12,6 +12,20 @@ async function readTalkersFile() {
   }
 }
 
+async function addTalkerToTalkersFile(talker) {
+  try {
+    const filePath = path.resolve(__dirname, '../talker.json');
+    const data = await readTalkersFile();
+    data.push(talker);
+    const dataJSON = JSON.stringify(data);
+    await fs.writeFile(filePath, dataJSON);
+  } catch (err) {
+    console.error(`Erro ao adicionar o talker ao arquivo: ${err.message}`);
+    throw err;
+  }
+}
+
 module.exports = {
   readTalkersFile,
+  addTalkerToTalkersFile,
 }
