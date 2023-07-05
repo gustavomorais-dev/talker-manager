@@ -12,8 +12,23 @@ function isValidDate(date) {
   return dateRegex.test(date);
 }
 
+function isValidName(name) {
+  return name.length >= 3;
+}
+
+function isValidAge(age) {
+  return typeof age === 'number' && Number.isInteger(age) && age >= 18;
+}
+
+function isValidTalk(talk) {
+  return typeof talk === 'object';
+}
+
 module.exports = {
   isValidEmail,
   isValidPassword,
   isValidDate,
+  isValidName,
+  isValidAge,
+  isValidTalk,
 }
