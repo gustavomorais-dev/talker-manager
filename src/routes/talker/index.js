@@ -4,6 +4,7 @@ const {
   HTTP_NOT_FOUND_STATUS,
   HTTP_CREATED_STATUS,
   HTTP_NO_CONTENT_STATUS,
+  HTTP_BAD_REQ_STATUS,
 } = require('../../config/constants');
 const { readTalkersFile, addTalkerToTalkersFile, updateTalker } = require('../../utils/fsUtils');
 const checkToken = require('../misc/checkToken');
@@ -13,6 +14,8 @@ const {
   validateTalk,
   validateTalkWatchedAt,
   validateTalkRate,
+  invalidRateValue,
+  invalidRateFormat,
 } = require('./validateTalker');
 const { validateFiltersParams, filterData } = require('./filters');
 
@@ -114,6 +117,29 @@ router.delete('/:id', checkToken, async (req, res) => {
 
   data.splice(talkerIndex, 1);
 
+  await updateTalker(data);
+  res.sendStatus(HTTP_NO_CONTENT_STATUS);
+});
+
+// PATCH
+
+router.patch('/rate/:id', checkToken, async (req, res) => {
+  const { id } = req.params;
+  const { rate } = req.body;
+  const data = await readTalkersFile();
+  const talkerIndex = data.findIndex((talker) => talker.id === Number(id));
+  if (talkerIndex === -1) {
+    return res.status(HTTP_NOT_FOUND_STATUS).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  if (invalidRateFormat(rate)) {
+    return res.status(HTTP_BAD_REQ_STATUS)
+      .json({ message: 'O campo "rate" é obrigatório' });
+  }
+  if (invalidRateValue(Number(rate))) {
+    return res.status(HTTP_BAD_REQ_STATUS)
+      .json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' });
+  }
+  data[talkerIndex].talk.rate = rate;
   await updateTalker(data);
   res.sendStatus(HTTP_NO_CONTENT_STATUS);
 });

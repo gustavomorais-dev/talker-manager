@@ -67,5 +67,6 @@ module.exports = {
   validateTalk,
   validateTalkWatchedAt,
   validateTalkRate,
+  invalidRateFormat,
   invalidRateValue,
 };
