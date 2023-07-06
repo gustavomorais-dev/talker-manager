@@ -4,7 +4,7 @@ const {
   HTTP_NOT_FOUND_STATUS,
   HTTP_CREATED_STATUS,
 } = require('../../config/constants');
-const { readTalkersFile, addTalkerToTalkersFile } = require('../../utils/fsUtils');
+const { readTalkersFile, addTalkerToTalkersFile, updateTalker } = require('../../utils/fsUtils');
 const checkToken = require('../misc/checkToken');
 const {
   validateName,
@@ -61,6 +61,38 @@ router.post(
 
   await addTalkerToTalkersFile(newTalker);
   res.status(HTTP_CREATED_STATUS).json(newTalker);
+},
+);
+
+// PUT
+
+router.put(
+  '/:id',
+  checkToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkWatchedAt,
+  validateTalkRate,
+  async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const data = await readTalkersFile();
+  const talkerIndex = data.findIndex((talker) => talker.id === Number(id));
+  
+  if (talkerIndex === -1) {
+    return res.status(HTTP_NOT_FOUND_STATUS).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+
+  data[talkerIndex] = {
+    id: data[talkerIndex].id,
+    name,
+    age,
+    talk,
+  };
+
+  await updateTalker(data);
+  res.status(HTTP_OK_STATUS).json(data[talkerIndex]);
 },
 );
 
