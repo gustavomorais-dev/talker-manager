@@ -1,4 +1,4 @@
-const { HTTP_UNAUTHORIZED_STATUS } = require("../../config/constants");
+const { HTTP_UNAUTHORIZED_STATUS } = require('../../config/constants');
 
 const checkToken = (req, res, next) => {
   const token = req.headers.authorization;

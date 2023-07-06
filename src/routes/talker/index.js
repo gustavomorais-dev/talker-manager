@@ -1,9 +1,18 @@
 const express = require('express');
-const { HTTP_OK_STATUS, HTTP_NOT_FOUND_STATUS, HTTP_CREATED_STATUS } = require('../../config/constants');
+const {
+  HTTP_OK_STATUS,
+  HTTP_NOT_FOUND_STATUS,
+  HTTP_CREATED_STATUS,
+} = require('../../config/constants');
 const { readTalkersFile, addTalkerToTalkersFile } = require('../../utils/fsUtils');
 const checkToken = require('../misc/checkToken');
-const validateFields = require('./validateFields');
-const validateTalk = require('./validateTalk');
+const {
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkWatchedAt,
+  validateTalkRate,
+} = require('./validateTalker');
 
 const router = express.Router();
 
@@ -18,7 +27,7 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const talkers = await readTalkersFile();
 
-  const talker = talkers.find((talker) => talker.id === Number(id));
+  const talker = talkers.find((t) => t.id === Number(id));
 
   if (talker) {
     res.status(HTTP_OK_STATUS).json(talker);
@@ -29,21 +38,30 @@ router.get('/:id', async (req, res) => {
 
 // POST
 
-router.post('/', checkToken, validateFields, validateTalk, async (req, res) => {
+router.post(
+  '/',
+  checkToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkWatchedAt,
+  validateTalkRate,
+  async (req, res) => {
   const { name, age, talk } = req.body;
 
   const data = await readTalkersFile();
 
-  const newId = data.length + 1;
+  const id = data.length + 1;
   const newTalker = {
-    id: newId,
-    name: name,
-    age: age,
-    talk: talk
+    id,
+    name,
+    age,
+    talk,
   };
 
   await addTalkerToTalkersFile(newTalker);
   res.status(HTTP_CREATED_STATUS).json(newTalker);
-});
+},
+);
 
 module.exports = router;
