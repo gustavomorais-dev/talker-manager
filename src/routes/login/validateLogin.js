@@ -1,5 +1,5 @@
-const { HTTP_BAD_REQ_STATUS } = require("../../config/constants");
-const { isValidEmail, isValidPassword } = require("../../utils/validateUtils");
+const { HTTP_BAD_REQ_STATUS } = require('../../config/constants');
+const { isValidEmail, isValidPassword } = require('../../utils/validateUtils');
 
 function validateLogin(req, res, next) {
   const { email, password } = req.body;

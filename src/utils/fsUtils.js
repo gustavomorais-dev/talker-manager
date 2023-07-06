@@ -28,4 +28,4 @@ async function addTalkerToTalkersFile(talker) {
 module.exports = {
   readTalkersFile,
   addTalkerToTalkersFile,
-}
+};
