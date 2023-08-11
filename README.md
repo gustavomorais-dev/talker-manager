@@ -1,6 +1,6 @@
 # Talker Manager
 
-Uma lista de planetas do universo StarWars com filtros de pesquisa. O app utiliza Context API e Hooks para controlar os estados globais.
+Uma API de um CRUD de talkers (palestrantes) em que será possível cadastrar, visualizar, pesquisar, editar e excluir informações.
 
 ## Começando
 
